@@ -1,0 +1,26 @@
+{
+  "name": "hammam-zarefa/rapid-ranker",
+  "description": "level up your users",
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "HammamZarefa\\RapidRanker\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "HammamZarefa\\RapidRanker\\RapidRankerServiceProvider"
+      ]
+    }
+  },
+  "authors": [
+    {
+      "name": "hammamZarefa",
+      "email": "hammamzarefa@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "orchestra/testbench": "^8.15"
+  }
+}
