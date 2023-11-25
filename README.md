@@ -17,11 +17,11 @@ php artisan vendor:publish --tag=migrations
 ```
 
 ## Usage
+
+### Add Level to user model
 ```php
 use HasLevel;
 ```
-### Add Level to user model
-
 ### Get Current Level
 To get the current level of a user:
 ```php
