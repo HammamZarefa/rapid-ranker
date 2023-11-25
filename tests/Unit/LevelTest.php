@@ -1,11 +1,11 @@
 <?php
 
-namespace Unit;
+namespace HammamZarefa\RapidRanker\Tests\Unit;
 
+use HammamZarefa\RapidRanker\Tests\TestCase;
 use HammamZarefa\RapidRanker\Traits\HasLevel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use TestCase;
 
 class LevelTest extends TestCase
 {
@@ -15,7 +15,7 @@ class LevelTest extends TestCase
 
     public function testGetCurrentLevel()
     {
-
+        $userMock = $this->createMock(User::class);
         $level =$this->getLevel(1);
         $this->assertEquals(1);
     }

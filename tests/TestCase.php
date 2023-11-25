@@ -1,5 +1,5 @@
 <?php
-
+namespace HammamZarefa\RapidRanker\Tests;
 
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;

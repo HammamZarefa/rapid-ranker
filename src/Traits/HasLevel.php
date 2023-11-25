@@ -129,4 +129,10 @@ trait HasLevel
         $this->save();
         return $this->lock_level;
     }
+
+    public function getUserLevelsHistory()
+    {
+        $userHistory = LevelAudit::where('user_id',$this->id)->orderBy('id','desc')->get();
+        return $userHistory;
+    }
 }
