@@ -20,14 +20,14 @@ trait HasLevel
                 $currentLevel->next_level_points - $this->points;
             $data['progress'] = $this->points * 100 / $currentLevel->next_level_points;
             if ($this->level == 1)
-                $data['remain_days'] = 1000;
+                $data['remain_days'] = 10000;
             else
                 $data['remain_days'] =
                     $currentLevel->points_reach_duration - now()
                         ->diffInDays($this->getLastLevelChange($this)->created_at);
         } else {
-            $data['remain_points'] = 1000000;
-            $data['remain_days'] = 1000;
+            $data['remain_points'] = -1;
+            $data['remain_days'] = 100000;
             $data['progress'] = 0;
         }
         return $data;
@@ -44,6 +44,8 @@ trait HasLevel
         $this->save();
         if ($this->shouldUserLevelUp())
             $this->userLevelUp();
+        elseif ($this->shouldUserLevelDown())
+            $this->userLevelDown();
     }
 
 
@@ -75,7 +77,7 @@ trait HasLevel
     public function shouldUserLevelDown()
     {
         $data = $this->nextLevel();
-        if ($data['remain_points'] > 0 && $data['remain_days'] < 0)
+        if ($data['remain_days'] < 0)
             return true;
         return false;
     }
@@ -91,8 +93,8 @@ trait HasLevel
 
     public function userLevelUp()
     {
+        $this->points = $this->points - $this->getLevel($this->level)->next_level_points;
         $this->level += 1;
-        $this->points = 0;
         $this->save();
         LevelAudit::create([
             "user_id" => $this->id,
@@ -132,7 +134,8 @@ trait HasLevel
 
     public function getUserLevelsHistory()
     {
-        $userHistory = LevelAudit::where('user_id',$this->id)->orderBy('id','desc')->get();
+        $userHistory = LevelAudit::where('user_id', $this->id)->orderBy('id', 'desc')->get();
         return $userHistory;
     }
+
 }
