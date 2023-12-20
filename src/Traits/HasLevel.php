@@ -68,6 +68,8 @@ trait HasLevel
 
     public function shouldUserLevelUp()
     {
+        if ($this->lock_level)
+            return false;
         $data = $this->nextLevel();
         if ($data['remain_points'] <= 0 && $data['remain_days'] >= 0)
             return true;
@@ -76,6 +78,8 @@ trait HasLevel
 
     public function shouldUserLevelDown()
     {
+        if ($this->lock_level)
+            return false;
         $data = $this->nextLevel();
         if ($data['remain_days'] < 0)
             return true;
