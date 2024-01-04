@@ -68,7 +68,7 @@ trait HasLevel
 
     public function shouldUserLevelUp()
     {
-        if ($this->lock_level)
+        if ($this->lock_level || $this->level == (Level::orderBy('level', 'desc')->first())->level)
             return false;
         $data = $this->nextLevel();
         if ($data['remain_points'] <= 0 && $data['remain_days'] >= 0)
@@ -78,7 +78,7 @@ trait HasLevel
 
     public function shouldUserLevelDown()
     {
-        if ($this->lock_level)
+        if ($this->lock_level || $this->level == 1)
             return false;
         $data = $this->nextLevel();
         if ($data['remain_days'] < 0)
@@ -97,6 +97,8 @@ trait HasLevel
 
     public function userLevelUp()
     {
+        if ($this->lock_level || $this->level == (Level::orderBy('level', 'desc')->first())->level)
+            return false;
         $this->points = $this->points - $this->getLevel($this->level)->next_level_points;
         $this->level += 1;
         $this->save();
@@ -104,10 +106,16 @@ trait HasLevel
             "user_id" => $this->id,
             "level_to" => $this->level
         ]);
+        if ($this->shouldUserLevelUp()) {
+            $this->userLevelUp();
+        }
     }
 
-    public function userLevelDown()
+    public
+    function userLevelDown()
     {
+        if ($this->lock_level || $this->level == 1)
+            return false;
         $this->level -= 1;
         $this->points = 0;
         $this->save();
@@ -117,7 +125,8 @@ trait HasLevel
         ]);
     }
 
-    public function lockLevel($level)
+    public
+    function lockLevel($level)
     {
         $this->lock_level = $level;
         $this->level = $level;
@@ -126,7 +135,8 @@ trait HasLevel
         return $this->lock_level;
     }
 
-    public function unlockLevel($level = null)
+    public
+    function unlockLevel($level = null)
     {
         $this->lock_level = null;
         if ($level)
@@ -136,7 +146,8 @@ trait HasLevel
         return $this->lock_level;
     }
 
-    public function getUserLevelsHistory()
+    public
+    function getUserLevelsHistory()
     {
         $userHistory = LevelAudit::where('user_id', $this->id)->orderBy('id', 'desc')->get();
         return $userHistory;
