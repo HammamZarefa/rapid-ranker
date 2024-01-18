@@ -24,7 +24,7 @@ trait HasLevel
             else
                 $data['remain_days'] =
                     $currentLevel->points_reach_duration - now()
-                        ->diffInDays($this->getLastLevelChange($this)->created_at);
+                        ->diffInDays($this->getLastLevelChange($this)->created_at ?? now();
         } else {
             $data['remain_points'] = -1;
             $data['remain_days'] = 100000;
